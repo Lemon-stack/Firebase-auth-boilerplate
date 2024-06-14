@@ -5,4 +5,5 @@ const Container = lazy (()=> import('../components/Container'))
 const Hero = lazy(()=> import('../components/Hero'))
 const PrivateRoutesContainer = lazy(()=> import('../components/PrivateRoutesContainer'))
 const Login = lazy(()=> import('../auth/Login'))
-export {Signup, Login, Home, Container, Hero, PrivateRoutesContainer}
+const PasswordReset = lazy(()=> import('../auth/PasswordReset'))
+export {Signup, Login, Home, Container, Hero, PrivateRoutesContainer, PasswordReset}

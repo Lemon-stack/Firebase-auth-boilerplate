@@ -1,14 +1,12 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import { auth } from '../client/client';
+import { auth, provider } from '../client/client';
 import { createUserWithEmailAndPassword, 
          signInWithEmailAndPassword, 
          signOut, 
          onAuthStateChanged, 
-         signInWithPopup, GoogleAuthProvider, 
-         reauthenticateWithCredential, 
-         EmailAuthProvider, 
-         updatePassword
+         sendPasswordResetEmail,
+         signInWithRedirect
         } from 'firebase/auth';
 
 
@@ -18,6 +16,7 @@ export const AuthContext = React.createContext();
 export default function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  
 
   function signup(email, password){
     return createUserWithEmailAndPassword(auth,email, password);
@@ -31,18 +30,27 @@ export default function AuthProvider({ children }) {
     return signOut(auth);
   }
   function googleSignin() {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    
+    return signInWithRedirect(auth, provider);
   }
-
-  const reauthenticate = async (currentPassword) => {
-    const credential = EmailAuthProvider.credential(currentUser.email, currentPassword);
-    return reauthenticateWithCredential(currentUser, credential);
+  const sendPasswordReset = async (email) => {
+    return sendPasswordResetEmail(auth, email);
   };
 
-  const updatePasswordHandler = async (newPassword) => {
-    return updatePassword(currentUser, newPassword);
-  };
+  // useEffect(() => {
+  //   const checkRedirectResult = async () => {
+  //     try {
+  //       const result = await getRedirectResult(auth);
+  //       if (result) {
+  //         setCurrentUser(result.user);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error getting redirect result:', error);
+  //     }
+  //   };
+
+  //   checkRedirectResult();
+  // }, [currentUser]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -75,12 +83,12 @@ export default function AuthProvider({ children }) {
     login,
     logout,
     googleSignin,
-    reauthenticate,
-    updatePasswordHandler,
+    sendPasswordReset,
   };
 
   if(loading){
-    return <h2> loading.....</h2>
+    return <div>Loading......</div>
+  
   }
 
   return (

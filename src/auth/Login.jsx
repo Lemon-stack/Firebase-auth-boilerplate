@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/useAuth"
 import { useNavigate } from 'react-router-dom'
 
@@ -8,7 +8,7 @@ export default function Login() {
   const passwordRef = useRef();
 
   const navigate = useNavigate()
-  const {login, googleSignin } = useAuth();
+  const {login, googleSignin, currentUser } = useAuth();
   
 
   async function handleSubmit(e) {
@@ -33,15 +33,20 @@ export default function Login() {
       setError(errorMessage ? errorMessage[1] : 'An error occurred');
     }
   }
+  useEffect(()=>{
+    if (currentUser) {
+      navigate('/dashboard');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[currentUser])
 
 
   return (
     <div className="flex flex-col justify-center items-center">
-    {error && <div className="absolute top-0 right-0 bg-clRed text-white px-8 lg:px-10 py-1 flex justify-center items-center">{error}</div>}
+    {error && <div className="absolute top-0 right-0 bg-red-400 text-white px-8 lg:px-10 py-1 flex justify-center items-center">{error}</div>}
     <div className="relative p-4 w-full max-w-md h-full md:h-auto">
       <div className="relative bg-white rounded-lg shadow">
         <div className="p-5">
-          <h3 className="text-2xl mb-0.5 font-medium" />
           <p className="mb-4 text-sm font-normal text-gray-800" />
           <div className="text-center">
             <p className="mb-3 text-2xl font-semibold leading-5 text-slate-900">
@@ -112,10 +117,10 @@ export default function Login() {
             />
              <p className="mb-3 mt-2 text-sm text-gray-500">
               <a
-                href="/forgot-password"
+                href="/password-reset"
                 className="text-blue-800 hover:text-blue-600"
               >
-                Reset your password?
+                Forgot password?
               </a>
             </p>
             <button

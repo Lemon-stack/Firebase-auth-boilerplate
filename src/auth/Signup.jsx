@@ -120,7 +120,7 @@ export default function Signup() {
           <div className="mt-6 text-center text-sm text-slate-600">
             Already have an account?
             <a href='login' className="font-light ml-1 text-gray-800">
-              Logincd fire
+              Login
             </a>
           </div>
         </div>
